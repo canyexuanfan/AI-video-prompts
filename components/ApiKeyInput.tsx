@@ -68,12 +68,12 @@ export const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange, onMode
 
   const clearApiKey = () => {
     setApiKey('');
-    setModelId('doubao-pro-4k'); // 重置为默认模型ID
+    setModelId(''); // 清空模型ID，要求用户手动输入
     localStorage.removeItem(API_KEY_STORAGE_KEY);
-    localStorage.setItem(MODEL_ID_STORAGE_KEY, 'doubao-pro-4k');
+    localStorage.removeItem(MODEL_ID_STORAGE_KEY);
     setIsConfigured(false);
     onApiKeyChange('');
-    onModelIdChange('doubao-pro-4k');
+    onModelIdChange('');
   };
 
   return (
