@@ -1,6 +1,7 @@
 // 火山引擎豆包API服务
 const API_URL = 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
-const MODEL_ID = 'ep-20250821232705-l2vzg';
+// 使用通用的豆包模型ID，用户需要在火山引擎控制台创建对应的推理接入点
+const MODEL_ID = 'doubao-pro-4k';
 
 // 将文件转换为base64格式
 const fileToBase64 = async (file: File): Promise<string> => {
@@ -86,13 +87,13 @@ export type ProgressStatus = 'in-progress' | 'done' | 'failed' | 'pending';
 export type ProgressCallback = (stageIndex: number, status: ProgressStatus) => void;
 
 // 调用火山引擎豆包API
-const callArkAPI = async (messages: any[], systemInstruction: string, apiKey: string): Promise<string> => {
+const callArkAPI = async (messages: any[], systemInstruction: string, apiKey: string, modelId: string = 'doubao-pro-4k'): Promise<string> => {
   if (!apiKey) {
     throw new Error('API密钥未配置，请先在页面顶部输入您的火山引擎豆包API密钥');
   }
 
   const requestBody = {
-    model: MODEL_ID,
+    model: modelId,
     messages: [
       {
         role: "system",
@@ -147,7 +148,8 @@ export const generateDescription = async (
     customStyleText: string, 
     cameraTechniques: string[],
     onProgress: ProgressCallback,
-    apiKey: string
+    apiKey: string,
+    modelId: string = 'doubao-pro-4k'
 ): Promise<string> => {
     
     let currentStage = -1;
@@ -255,7 +257,7 @@ export const generateDescription = async (
             content: content
         }];
 
-        const resultText = await callArkAPI(messages, systemInstruction, apiKey);
+        const resultText = await callArkAPI(messages, systemInstruction, apiKey, modelId);
         onProgress(currentStage, 'done');
         
         // Stage 3: 接收并解析结果...
@@ -279,7 +281,7 @@ export const generateDescription = async (
     }
 };
 
-export const fuseStyles = async (stylesToFuse: { name: string; description: string }[], apiKey: string): Promise<string> => {
+export const fuseStyles = async (stylesToFuse: { name: string; description: string }[], apiKey: string, modelId: string = 'doubao-pro-4k'): Promise<string> => {
     const systemInstruction = `
     You are a master AI video prompt engineer specializing in style fusion.
     Your task is to semantically merge multiple distinct video style descriptions into a single, cohesive, and creative new style description.
@@ -309,7 +311,7 @@ Description: ${style.description}
             }]
         }];
 
-        const result = await callArkAPI(messages, systemInstruction, apiKey);
+        const result = await callArkAPI(messages, systemInstruction, apiKey, modelId);
         return result.trim();
     } catch (error) {
         console.error("Ark API Error during style fusion:", error);

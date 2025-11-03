@@ -144,6 +144,7 @@ const App: React.FC = () => {
   
   // API密钥状态
   const [apiKey, setApiKey] = useState<string>('');
+  const [modelId, setModelId] = useState<string>('doubao-pro-4k');
 
   // 初始化API密钥
   useEffect(() => {
@@ -353,7 +354,7 @@ const App: React.FC = () => {
     };
 
     try {
-      const description = await generateDescription(text, startFrame, endFrame, styleId, customStyleText, cameraTechniques, onProgressUpdate, apiKey);
+      const description = await generateDescription(text, startFrame, endFrame, styleId, customStyleText, cameraTechniques, onProgressUpdate, apiKey, modelId);
       setResult(description);
       addToHistory(description);
       if (styleId === 'custom' && customStyleText) {
@@ -457,7 +458,7 @@ const App: React.FC = () => {
       
       // 步骤2：调用AI进行风格融合
       updateProgress(1, 'in-progress');
-      const fusedDescription = await fuseStyles(stylesToFuse.map(s => ({ name: s.name, description: s.description })), apiKey);
+      const fusedDescription = await fuseStyles(stylesToFuse.map(s => ({ name: s.name, description: s.description })), apiKey, modelId);
       updateProgress(1, 'done');
       
       // 步骤3：生成新的融合风格描述
@@ -549,6 +550,7 @@ const App: React.FC = () => {
         {/* API密钥输入组件 */}
         <ApiKeyInput 
           onApiKeyChange={setApiKey}
+          onModelIdChange={setModelId}
         />
 
         <main className="bg-gray-800 rounded-2xl shadow-2xl p-6 md:p-8 flex flex-col gap-6 transition-all duration-300">
