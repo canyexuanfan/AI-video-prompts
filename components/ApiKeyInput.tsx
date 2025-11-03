@@ -28,13 +28,8 @@ export const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange, onMode
     if (savedModelId) {
       setModelId(savedModelId);
       onModelIdChange(savedModelId);
-    } else {
-      // 设置默认模型ID
-      const defaultModelId = 'doubao-pro-4k';
-      setModelId(defaultModelId);
-      localStorage.setItem(MODEL_ID_STORAGE_KEY, defaultModelId);
-      onModelIdChange(defaultModelId);
     }
+    // 不再设置默认模型ID，要求用户手动输入推理接入点ID
     
     setIsConfigured(!!savedApiKey);
   }, [onApiKeyChange, onModelIdChange]);
@@ -139,14 +134,14 @@ export const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange, onMode
             type="text"
             value={modelId}
             onChange={(e) => handleModelIdChange(e.target.value)}
-            placeholder="请输入模型ID (如: doubao-pro-4k 或您的推理接入点ID)"
+            placeholder="请输入推理接入点ID (以ep-开头，如: ep-20241114133215-75z5q)"
             className="w-full p-3 bg-gray-900 border-2 border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors text-gray-300 placeholder-gray-500"
           />
         </div>
         
         <div className="text-sm text-gray-400 space-y-1">
           <p>• 请在 <a href="https://console.volcengine.com/ark" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 underline">火山引擎控制台</a> 获取您的 API 密钥</p>
-          <p>• 模型ID可以是通用模型(如doubao-pro-4k)或您创建的推理接入点ID</p>
+          <p>• 推理接入点ID请在控制台的"在线推理"页面创建，格式为ep-开头的字符串</p>
           <p>• API 密钥将安全地保存在您的浏览器本地存储中</p>
           <p>• 我们不会收集或存储您的 API 密钥和模型配置</p>
         </div>

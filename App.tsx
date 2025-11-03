@@ -144,7 +144,7 @@ const App: React.FC = () => {
   
   // API密钥状态
   const [apiKey, setApiKey] = useState<string>('');
-  const [modelId, setModelId] = useState<string>('doubao-pro-4k');
+  const [modelId, setModelId] = useState<string>('');
 
   // 初始化API密钥
   useEffect(() => {

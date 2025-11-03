@@ -87,9 +87,13 @@ export type ProgressStatus = 'in-progress' | 'done' | 'failed' | 'pending';
 export type ProgressCallback = (stageIndex: number, status: ProgressStatus) => void;
 
 // 调用火山引擎豆包API
-const callArkAPI = async (messages: any[], systemInstruction: string, apiKey: string, modelId: string = 'doubao-pro-4k'): Promise<string> => {
+const callArkAPI = async (messages: any[], systemInstruction: string, apiKey: string, modelId: string = ''): Promise<string> => {
   if (!apiKey) {
     throw new Error('API密钥未配置，请先在页面顶部输入您的火山引擎豆包API密钥');
+  }
+  
+  if (!modelId) {
+    throw new Error('推理接入点ID未配置，请先在页面顶部输入您的推理接入点ID（以ep-开头）');
   }
 
   const requestBody = {
@@ -141,15 +145,15 @@ const callArkAPI = async (messages: any[], systemInstruction: string, apiKey: st
 };
 
 export const generateDescription = async (
-    promptText: string, 
-    startFrameFile: File, 
-    endFrameFile: File | null, 
-    style: string, 
-    customStyleText: string, 
-    cameraTechniques: string[],
-    onProgress: ProgressCallback,
-    apiKey: string,
-    modelId: string = 'doubao-pro-4k'
+  promptText: string,
+  startFrameFile: File | null,
+  endFrameFile: File | null,
+  style: string,
+  customStyleText: string,
+  cameraTechniques: string[],
+  onProgress: ProgressCallback,
+  apiKey: string,
+  modelId: string = ''
 ): Promise<string> => {
     
     let currentStage = -1;
@@ -281,7 +285,7 @@ export const generateDescription = async (
     }
 };
 
-export const fuseStyles = async (stylesToFuse: { name: string; description: string }[], apiKey: string, modelId: string = 'doubao-pro-4k'): Promise<string> => {
+export const fuseStyles = async (stylesToFuse: { name: string; description: string }[], apiKey: string, modelId: string = ''): Promise<string> => {
     const systemInstruction = `
     You are a master AI video prompt engineer specializing in style fusion.
     Your task is to semantically merge multiple distinct video style descriptions into a single, cohesive, and creative new style description.
